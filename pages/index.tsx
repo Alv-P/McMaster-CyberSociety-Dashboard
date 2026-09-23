@@ -1,6 +1,6 @@
 import type {NextPage} from 'next';
 import Head from 'next/head';
-import {FormEvent, useState} from 'react';
+import {FormEvent, useEffect, useState} from 'react';
 
 const announcements = [
    {tag: 'Featured', title: 'Fall Kickoff Social', body: 'Meet the community, learn about our plans, and find your next CTF teammate.', date: 'Sep 30 · 6:30 PM'},
@@ -17,10 +17,42 @@ const resources = [
    {title: 'Career Toolkit', text: 'Templates, event notes, and advice for building a cybersecurity portfolio.'},
 ];
 
+const socialLinks = [
+   {name: 'Discord', href: 'https://discord.com/invite/nfjz2WmWrJ', symbol: 'D'},
+   {name: 'Instagram', href: 'https://instagram.com/mcmastercss', symbol: '◎'},
+   {name: 'Linktree', href: 'https://linktr.ee/mcmastercss', symbol: '+'},
+   {name: 'Email', href: 'mailto:mcss@mcmaster.ca', symbol: '✉'},
+];
+
 const Home: NextPage = () => {
    const [menuOpen, setMenuOpen] = useState(false);
    const [submitted, setSubmitted] = useState(false);
    const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setSubmitted(true); };
+   useEffect(() => {
+      let previousScroll = window.scrollY;
+      const header = document.querySelector('.site-header');
+      const contactIntro = document.querySelector('.contact-grid > div');
+      const socialContainer = document.createElement('div');
+      socialContainer.className = 'social-links';
+      socialContainer.setAttribute('aria-label', 'Follow McMaster Computer Science Society');
+      socialLinks.forEach((social) => {
+         const link = document.createElement('a');
+         link.href = social.href;
+         link.setAttribute('aria-label', social.name);
+         link.title = social.name;
+         if (social.name !== 'Email') { link.target = '_blank'; link.rel = 'noreferrer'; }
+         link.innerHTML = `<span aria-hidden="true">${social.symbol}</span><span>${social.name}</span>`;
+         socialContainer.appendChild(link);
+      });
+      contactIntro?.appendChild(socialContainer);
+      const handleScroll = () => {
+         const currentScroll = window.scrollY;
+         header?.classList.toggle('header-hidden', currentScroll > 88 && currentScroll > previousScroll);
+         previousScroll = currentScroll;
+      };
+      window.addEventListener('scroll', handleScroll, {passive: true});
+      return () => { window.removeEventListener('scroll', handleScroll); socialContainer.remove(); };
+   }, []);
    return <><Head><title>McMaster Computer Science Society</title><meta name="description" content="A demo dashboard for the McMaster Computer Science Society." /><link rel="icon" href="/McMaster-Cybersociety-Logo.jpg" /></Head>
       <header className="site-header"><a className="brand" href="#home" aria-label="McMaster Computer Science Society home"><img src="/McMaster-Cybersociety-Logo.jpg" alt="McMaster Computer Science Society logo" /><span><strong>McMaster</strong><small>Computer Science Society</small></span></a><button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation">☰</button><nav className={menuOpen ? 'open' : ''} aria-label="Main navigation"><a href="#updates">Updates</a><a href="#projects">Projects</a><a href="#ctf">CTFs</a><a href="#resources">Resources</a><a href="#about">About</a><a className="nav-cta" href="#contact">Get involved <span>↗</span></a></nav></header>
       <main id="home"><section className="hero section-shell"><div className="hero-copy"><p className="eyebrow">McMaster University · Hamilton, ON</p><h1>Learn, build,<br /><em>and break things</em>.</h1><p className="hero-text">A home for curious McMaster students to explore computer science, cybersecurity, and the people behind both.</p><div className="hero-actions"><a className="button button-primary" href="#contact">Join the community <span>→</span></a><a className="button button-plain" href="#updates">See what&apos;s on <span>↓</span></a></div></div><aside className="next-event"><p className="card-label"><span className="status-dot" /> Next up</p><div className="event-date"><b>30</b><span>SEP<br />TUE</span></div><h2>Fall Kickoff<br />Social</h2><p>6:30 PM · TBA</p><a href="#contact">Save your spot <span>→</span></a></aside></section>
