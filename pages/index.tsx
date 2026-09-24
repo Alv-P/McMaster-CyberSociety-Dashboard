@@ -4,73 +4,164 @@ import {FormEvent, useEffect, useState} from 'react';
 import {ContentCarousel} from '../components/content-carousel';
 
 const announcements = [
-   {tag: 'Featured', title: 'Fall Kickoff Social', body: 'Meet the community, learn about the semester ahead, and find your next CTF teammate.', date: 'Sep 30 · 6:30 PM'},
-   {tag: 'Workshop', title: 'Intro to Web Security', body: 'A hands-on starter session built around safe practice labs and beginner-friendly CTF concepts.', date: 'Oct 8 · 5:30 PM'},
-];
-const societyEvents = [
-   {day: '30', month: 'SEP', title: 'Fall Kickoff Social', detail: 'Meet the community and find your next CTF teammate.', type: 'Community'},
-   {day: '08', month: 'OCT', title: 'Intro to Web Security', detail: 'A hands-on session on the building blocks of web security.', type: 'Workshop'},
-   {day: '22', month: 'OCT', title: 'CTF Team Night', detail: 'Bring a laptop, form a team, and tackle beginner-friendly challenges.', type: 'Competition'},
+   {tag: 'Featured', title: 'Fall Kickoff Social', body: 'Meet the community, learn about our plans, and find your next CTF teammate.', date: 'Sep 30 · 6:30 PM'},
+   {tag: 'Workshop', title: 'Intro to Web Security', body: 'A hands-on starter session. Bring a laptop and your curiosity.', date: 'Oct 8 · 5:30 PM'},
 ];
 const projects = [
-   {icon: '!', title: 'LLM Prompt Injection Firewall', body: 'A concept for screening adversarial prompts before they reach an LLM.', featured: true},
-   {icon: '</>', title: 'Writeup library', body: 'A searchable home for team solve notes, tooling tips, and post-CTF lessons.'},
-   {icon: '#', title: 'Team finder', body: 'A lightweight way for students to share interests and form balanced competition teams.'},
+   {icon: '⌘', title: 'LLM Prompt Injection Firewall', body: 'A cybersecurity project concept for screening adversarial prompts before they reach an LLM.', featured: true},
+   {icon: '◈', title: 'Project title', body: 'Add a screenshot, stack, team credits, and a link when ready.'},
+   {icon: '⌁', title: 'Project title', body: 'A space to show work the community is proud of.'},
 ];
 const resources = [
-   {title: 'Web Security', text: 'Build web-security fundamentals through guided, legal practice.', links: [{label: 'PortSwigger Web Security Academy', note: 'Free, hands-on labs covering nearly every web vuln class; the gold standard starting point.', href: 'https://portswigger.net/web-security'}, {label: 'OWASP Top 10', note: 'The standard reference for the most critical web app risks.', href: 'https://owasp.org/www-project-top-ten/'}, {label: 'Google XSS Game', note: 'Short, fun challenges specifically on cross-site scripting.', href: 'https://xss-game.appspot.com/'}, {label: 'HackTricks', note: 'A massive practical wiki on exploitation techniques, great as a reference once you are past basics.', href: 'https://book.hacktricks.xyz/'}]},
-   {title: 'CTF Starter Kit', text: 'Start with approachable challenges, then find a competition to join.', links: [{label: 'CTFtime.org', note: 'The CTF calendar and global rankings; also where your standings data could come from.', href: 'https://ctftime.org/'}, {label: 'picoCTF', note: 'Free and beginner-friendly; the classic first CTF for students.', href: 'https://picoctf.org/'}, {label: 'OverTheWire Wargames', note: 'Linux and binary challenge ladders for building fundamentals.', href: 'https://overthewire.org/wargames/'}, {label: 'CTF Field Guide', note: 'Trail of Bits explains CTF categories and how to approach each one.', href: 'https://trailofbits.github.io/ctf/'}]},
-   {title: 'Career Toolkit', text: 'Turn practice into a portfolio and learn what security roles involve.', links: [{label: 'TryHackMe', note: 'Guided learning paths, including free material, that bridge CTF skills into job-relevant knowledge.', href: 'https://tryhackme.com/'}, {label: 'LeetCode', note: 'For the software-engineering side of interviews, not just security.', href: 'https://leetcode.com/'}, {label: 'OSCP / Security Certification Roadmap', note: 'A useful reference for students considering pentesting careers.', href: 'https://www.offsec.com/courses/pen-200/'}], tip: 'Write up your CTF solves; even short ones. Recruiters and interviewers love seeing documented problem-solving.'},
+   {title: 'Web Security', text: 'A practical path through browser security, common flaws, and secure coding.'},
+   {title: 'CTF Starter Kit', text: 'Recommended tools, beginner-friendly challenges, and learning paths.'},
+   {title: 'Career Toolkit', text: 'Templates, event notes, and advice for building a cybersecurity portfolio.'},
 ];
 const ctfEvents = [
-   {title: 'Upcoming-event feed', date: 'Synced from CTFtime', detail: 'Filter upcoming events by format, time commitment, and team interest.'},
-   {title: 'Team sign-up board', date: 'Student-managed', detail: 'Match students by interests such as web, crypto, pwn, forensics, and OSINT.'},
+   {title: 'MapleCTF 2026', date: 'Oct 18–20 · Online', detail: 'Tell us what you’re into and we’ll help you find one.'},
+   {title: 'Hack the North CTF', date: 'Nov 8–10 · Waterloo, ON', detail: 'Looking for collaborators? We can help build your team.'},
 ];
+
 const socialLinks = [
-   {name: 'Discord', href: 'https://discord.com/invite/nfjz2WmWrJ', symbol: 'D'},
-   {name: 'Instagram', href: 'https://instagram.com/mcmastercss', symbol: 'O'},
-   {name: 'Linktree', href: 'https://linktr.ee/mcmastercss', symbol: '+'},
-   {name: 'Email', href: 'mailto:cybersociety@mcmaster.ca', symbol: 'mail'},
+   {name: 'Discord', href: 'https://discord.com/invite/TCGaMGDVuA', symbol: 'D'},
+   {name: 'Instagram', href: 'https://www.instagram.com/cybersociety.mcmaster/', symbol: '◎'},
+   {name: 'LinkedIn', href: 'https://www.linkedin.com/company/mcmaster-cyber-society/', symbol: 'in'},
+   {name: 'Linktree', href: 'https://linktr.ee/mcybersoc', symbol: '+'},
+   {name: 'Email', href: 'mailto:cybersoc@mcmaster.ca', symbol: '✉'},
 ];
 const teamMembers = [
-   {initials: 'AC', name: 'Avery Chen', role: 'Co-President', bio: 'Guiding the society’s direction, partnerships, and student community.'},
-   {initials: 'MP', name: 'Maya Patel', role: 'Vice-President, Events', bio: 'Designing workshops, socials, and hands-on opportunities to learn.'},
-   {initials: 'NW', name: 'Noah Williams', role: 'Director of Cybersecurity', bio: 'Leading CTF programming, technical sessions, and competition teams.'},
-   {initials: 'SM', name: 'Sofia Martin', role: 'Director of Outreach', bio: 'Connecting students with mentors, sponsors, and the wider community.'},
+   {name: 'Avery Chen', role: 'Co-President', group: 'Society lead', bio: 'Guiding the society’s direction, partnerships, and student community.'},
+   {name: 'Maya Patel', role: 'Vice-President, Events', group: 'Executive team', bio: 'Designing workshops, socials, and hands-on opportunities to learn.'},
+   {name: 'Noah Williams', role: 'Director of Cybersecurity', group: 'Executive team', bio: 'Leading CTF programming, technical sessions, and competition teams.'},
+   {name: 'Sofia Martin', role: 'Director of Outreach', group: 'Executive team', bio: 'Connecting students with mentors, sponsors, and the wider community.'},
 ];
 
 const Home: NextPage = () => {
    const [menuOpen, setMenuOpen] = useState(false);
    const [submitted, setSubmitted] = useState(false);
+   const [heroTitle, setHeroTitle] = useState('Learn, build,|and break things.');
+   const [isTypingTitle, setIsTypingTitle] = useState(false);
    const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); setSubmitted(true); };
+   useEffect(() => {
+      let titleTimer: number | undefined;
+      let sequence = 0;
+      const pendingTimeouts = new Set<number>();
+      const clearSequence = () => {
+         sequence += 1;
+         if (titleTimer) window.clearInterval(titleTimer);
+         pendingTimeouts.forEach((timeout) => window.clearTimeout(timeout));
+         pendingTimeouts.clear();
+         setIsTypingTitle(false);
+      };
+      const wait = (callback: () => void, delay: number, id: number) => {
+         const timeout = window.setTimeout(() => { pendingTimeouts.delete(timeout); if (id === sequence) callback(); }, delay);
+         pendingTimeouts.add(timeout);
+      };
+      const typeText = (text: string, id: number, done?: () => void) => {
+         let character = 0;
+         titleTimer = window.setInterval(() => {
+            if (id !== sequence) return;
+            const nextCharacter = text[character];
+            if (nextCharacter === undefined) { window.clearInterval(titleTimer); done?.(); return; }
+            setHeroTitle((title) => title + nextCharacter);
+            character += 1;
+            if (character === text.length) { window.clearInterval(titleTimer); done?.(); }
+         }, 48);
+      };
+      const eraseCharacters = (count: number, id: number, done: () => void) => {
+         let remaining = count;
+         titleTimer = window.setInterval(() => {
+            if (id !== sequence) return;
+            setHeroTitle((title) => title.slice(0, -1));
+            remaining -= 1;
+            if (!remaining) { window.clearInterval(titleTimer); done(); }
+         }, 42);
+      };
+      const beginTitleAnimation = () => {
+         clearSequence();
+         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+         const id = sequence;
+         setHeroTitle('');
+         setIsTypingTitle(true);
+         typeText('Learn, bulid,', id, () => wait(() => eraseCharacters(6, id, () => typeText('build,', id, () => {
+            typeText('|and brake things.', id, () => wait(() => eraseCharacters(13, id, () => typeText('break things.', id, () => setIsTypingTitle(false))), 350, id));
+         })), 350, id));
+      };
+      const hero = document.querySelector('.hero');
+      const observer = new IntersectionObserver(([entry]) => {
+         clearSequence();
+         if (!entry.isIntersecting) { setHeroTitle('Learn, build,|and break things.'); return; }
+         const id = sequence;
+         wait(beginTitleAnimation, 1400, id);
+      }, {threshold: .55});
+      if (hero) observer.observe(hero);
+      return () => { observer.disconnect(); clearSequence(); };
+   }, []);
    useEffect(() => {
       let previousScroll = window.scrollY;
       const header = document.querySelector('.site-header');
       const contactIntro = document.querySelector('.contact-grid > div');
+      const themeToggle = document.createElement('button');
+      const savedTheme = window.localStorage.getItem('mcss-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const setTheme = (dark: boolean) => {
+         document.body.classList.toggle('dark-mode', dark);
+         themeToggle.setAttribute('aria-pressed', String(dark));
+         themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+         themeToggle.innerHTML = dark ? '<span aria-hidden="true">☀</span><span>Light</span>' : '<span aria-hidden="true">◐</span><span>Dark</span>';
+         window.localStorage.setItem('mcss-theme', dark ? 'dark' : 'light');
+      };
+      themeToggle.className = 'theme-toggle';
+      themeToggle.type = 'button';
+      setTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+      themeToggle.addEventListener('click', () => setTheme(!document.body.classList.contains('dark-mode')));
+      header?.appendChild(themeToggle);
+      const teamCarousel = document.querySelector('.values-card');
+      let activeTeamMember = 0;
+      let teamTimer: number | undefined;
+      const renderTeamMember = () => {
+         if (!teamCarousel) return;
+         const member = teamMembers[activeTeamMember];
+         teamCarousel.innerHTML = `<p class="card-label">Meet the team</p><article class="team-slide"><p class="team-group">${member.group}</p><h3>${member.name}</h3><p class="team-role">${member.role}</p><p class="team-bio">${member.bio}</p></article><div class="team-dots" role="tablist" aria-label="Meet the team"><span class="team-count">${String(activeTeamMember + 1).padStart(2, '0')} / ${String(teamMembers.length).padStart(2, '0')}</span>${teamMembers.map((person, index) => `<button type="button" role="tab" aria-label="Show ${person.name}" aria-selected="${index === activeTeamMember}" class="${index === activeTeamMember ? 'active' : ''}" data-team-index="${index}"></button>`).join('')}</div>`;
+         teamCarousel.querySelectorAll<HTMLButtonElement>('[data-team-index]').forEach((dot) => dot.addEventListener('click', () => {
+            activeTeamMember = Number(dot.dataset.teamIndex);
+            renderTeamMember();
+            if (teamTimer) window.clearInterval(teamTimer);
+            teamTimer = window.setInterval(() => { activeTeamMember = (activeTeamMember + 1) % teamMembers.length; renderTeamMember(); }, 6000);
+         }));
+      };
+      renderTeamMember();
+      teamTimer = window.setInterval(() => { activeTeamMember = (activeTeamMember + 1) % teamMembers.length; renderTeamMember(); }, 6000);
       const socialContainer = document.createElement('div');
       socialContainer.className = 'social-links';
-      socialContainer.setAttribute('aria-label', 'Follow McMaster CyberSociety');
+      socialContainer.setAttribute('aria-label', 'Follow McMaster Computer Science Society');
       socialLinks.forEach((social) => {
-         const link = document.createElement('a'); link.href = social.href; link.setAttribute('aria-label', social.name); link.title = social.name;
+         const link = document.createElement('a');
+         link.href = social.href;
+         link.setAttribute('aria-label', social.name);
+         link.title = social.name;
          if (social.name !== 'Email') { link.target = '_blank'; link.rel = 'noreferrer'; }
-         link.innerHTML = `<span aria-hidden="true">${social.symbol}</span><span>${social.name}</span>`; socialContainer.appendChild(link);
+         link.innerHTML = `<span aria-hidden="true">${social.symbol}</span><span>${social.name}</span>`;
+         socialContainer.appendChild(link);
       });
       contactIntro?.appendChild(socialContainer);
-      const handleScroll = () => { const currentScroll = window.scrollY; header?.classList.toggle('header-hidden', currentScroll > 88 && currentScroll > previousScroll); previousScroll = currentScroll; };
+      const handleScroll = () => {
+         const currentScroll = window.scrollY;
+         header?.classList.toggle('header-hidden', currentScroll > 88 && currentScroll > previousScroll);
+         previousScroll = currentScroll;
+      };
       window.addEventListener('scroll', handleScroll, {passive: true});
-      return () => { window.removeEventListener('scroll', handleScroll); socialContainer.remove(); };
-   }, []);
-   return <><Head><title>McMaster CyberSociety | CTF & Learning Dashboard</title><meta name="description" content="A CTF standings and cybersecurity learning-resources dashboard for McMaster CyberSociety." /><link rel="icon" href="/McMaster-Cybersociety-Logo.jpg" /></Head>
-      <header className="site-header"><a className="brand" href="#home" aria-label="McMaster CyberSociety home"><img src="/McMaster-Cybersociety-Logo.jpg" alt="McMaster CyberSociety logo" /><span><strong>McMaster</strong><small>CyberSociety</small></span></a><button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation">Menu</button><nav className={menuOpen ? 'open' : ''} aria-label="Main navigation"><a href="#events">Events</a><a href="#ctf">CTF dashboard</a><a href="#resources">Resources</a><a href="#projects">Projects</a><a href="#team">Team</a><a className="nav-cta" href="#contact">Get involved <span>-&gt;</span></a></nav></header>
-      <main id="home"><section className="hero section-shell"><div className="hero-copy"><p className="eyebrow">McMaster University &middot; Hamilton, ON</p><h1>Learn, compete,<br /><em>level up together.</em></h1><p className="hero-text">A home for McMaster students to build cybersecurity skills, join CTF teams, and grow alongside a curious community.</p><div className="hero-actions"><a className="button button-primary" href="#ctf">Explore CTF central <span>-&gt;</span></a><a className="button button-plain" href="#events">See what&apos;s on <span>-&gt;</span></a></div></div><aside className="next-event"><p className="card-label"><span className="status-dot" /> Next up</p><div className="event-date"><b>30</b><span>SEP<br />TUE</span></div><h2>Fall Kickoff<br />Social</h2><p>6:30 PM · Student Centre</p><a href="#events">Save your spot <span>-&gt;</span></a></aside></section>
-      <section id="updates" className="section-shell content-section"><div className="section-heading"><p className="eyebrow">01 / Stay in the loop</p><h2>Announcements</h2><p>Workshops, competitions, and ways to get involved with the community.</p></div><ContentCarousel items={announcements} pageSize={2} className="announcement-grid" label="announcements" renderItem={(item) => <article className="announcement-card" key={item.title}><div><span className="tag">{item.tag}</span><span className="date">{item.date}</span></div><h3>{item.title}</h3><p>{item.body}</p><a href="#events">View event <span>-&gt;</span></a></article>} /></section>
-      <section id="events" className="section-shell content-section events-section"><div className="section-heading"><p className="eyebrow">02 / Get involved</p><h2>Events calendar</h2><p>Make time to learn something new, meet people, and put your skills to work.</p></div><div className="events-grid">{societyEvents.map((event) => <article className="event-card" key={event.title}><div className="event-card-date"><b>{event.day}</b><span>{event.month}</span></div><div><p className="card-label">{event.type}</p><h3>{event.title}</h3><p>{event.detail}</p></div><a href="#contact" aria-label={`Register interest for ${event.title}`}>-&gt;</a></article>)}</div></section>
-      <section id="ctf" className="section-shell content-section ctf-section"><div className="section-heading"><p className="eyebrow">03 / Capture the flag dashboard</p><h2>CTF central</h2><p>Track team momentum, discover the next competition, and make it easy to find collaborators.</p></div><div className="ctf-grid"><article className="ranking-card"><p className="card-label">Team standings</p><ol><li><span>1</span><b>byte_bandits</b><em>4,920 pts</em></li><li><span>2</span><b>root_access</b><em>3,840 pts</em></li><li><span>3</span><b>mcmaster_cyber</b><em>3,275 pts</em></li></ol><p className="data-note"><strong>Updated from CTFtime:</strong> team performance and upcoming-event data can be synced into one shared home for the society.</p><a href="https://ctftime.org/" target="_blank" rel="noreferrer">Explore CTFtime <span>-&gt;</span></a></article><article className="upcoming-card"><p className="card-label"><span className="status-dot" /> Coming up</p><ContentCarousel items={ctfEvents} pageSize={1} className="event-carousel" label="upcoming CTFs" renderItem={(event) => <div key={event.title}><h3>{event.title}</h3><p>{event.date}</p><div className="team-callout"><span>+</span><div><b>Looking for a team?</b><p>{event.detail}</p></div></div><a className="button button-primary" href="#contact">Register interest <span>-&gt;</span></a></div>} /></article></div></section>
-      <section id="resources" className="resource-band"><div className="section-shell"><div className="section-heading"><p className="eyebrow">03 / Learning hub</p><h2>Resources for the curious</h2><p>Curated starting points for safe, legal practice and career exploration.</p></div><ContentCarousel items={resources} pageSize={3} className="resource-grid" label="resources" renderItem={(resource, i) => <article className="resource-card" key={resource.title}><span>0{i + 1}</span><h3>{resource.title}</h3><p>{resource.text}</p><ul>{resource.links.map((link) => <li key={link.href}><a href={link.href} target="_blank" rel="noreferrer"><strong>{link.label} <i>-&gt;</i></strong><small>{link.note}</small></a></li>)}</ul>{resource.tip && <aside className="portfolio-tip"><b>Portfolio tip</b><p>{resource.tip}</p></aside>}</article>} /></div></section>
-      <section id="projects" className="section-shell content-section projects-section"><div className="section-heading"><p className="eyebrow">05 / Made at Mac</p><h2>Project showcase</h2><p>Ideas and tools built by students who like turning curiosity into something real.</p></div><ContentCarousel items={projects} pageSize={3} className="project-grid" label="projects" renderItem={(project, i) => <article className="project-card" key={project.title}><div className={`project-art art-${i + 1} ${project.featured ? 'firewall-art' : ''}`}>{project.featured ? <div className="firewall-preview" aria-label="Prompt firewall preview"><p><span>INPUT</span> Ignore prior instructions</p><div><b>SCAN</b><i>Threat detected</i></div><p><span>VERDICT</span> <strong>BLOCKED</strong></p></div> : <><span>{project.icon}</span><small>CYBERSOCIETY<br />PROJECT</small></>}</div><div className="project-content"><p className="card-label">{project.featured ? 'Cybersecurity project' : 'Community project'}</p><h3>{project.title}</h3><p>{project.body}</p><a href="#contact">View project <span>-&gt;</span></a></div></article>} /></section>
-      <section id="about" className="section-shell content-section about-section"><div className="about-copy"><p className="eyebrow">06 / About CyberSociety</p><h2>Built for the question-askers.</h2><p>McMaster CyberSociety is a student-led space to practise security skills responsibly, share what we learn, and compete together.</p><a className="button button-dark" href="#team">Meet the team <span>-&gt;</span></a></div><div className="values-card"><p className="card-label">What guides us</p><div><span>01</span><h3>Curiosity first</h3><p>Make the first step into cybersecurity feel approachable.</p></div><div><span>02</span><h3>Learn together</h3><p>Connect individual practice to a team and community.</p></div><div><span>03</span><h3>Make progress visible</h3><p>Celebrate participation, learning, and competition momentum.</p></div></div></section>
-      <section id="team" className="team-section"><div className="section-shell"><div className="section-heading"><p className="eyebrow">07 / The people behind it</p><h2>Meet the team</h2><p>Students building a more connected cybersecurity community at McMaster.</p></div><div className="team-grid">{teamMembers.map((member) => <article className="team-card" key={member.name}><span>{member.initials}</span><p className="card-label">Executive team</p><h3>{member.name}</h3><b>{member.role}</b><p>{member.bio}</p></article>)}</div></div></section>
-      <section id="contact" className="contact-section"><div className="section-shell contact-grid"><div><p className="eyebrow">08 / Let&apos;s talk</p><h2>Bring your<br /><em>next challenge.</em></h2><p>Have a CTF idea, a resource to add, or a project to share? We&apos;d love to hear it.</p><a href="mailto:cybersociety@mcmaster.ca">cybersociety@mcmaster.ca <span>-&gt;</span></a></div><form onSubmit={submit}><label>Your name<input required placeholder="Jane Doe" /></label><label>Email address<input required type="email" placeholder="you@mcmaster.ca" /></label><label>What can we help with?<select defaultValue=""><option value="" disabled>Choose a topic</option><option>CTF dashboard</option><option>Learning resources</option><option>Team finding</option><option>Something else</option></select></label><label>Message<textarea required placeholder="Tell us a little more..." rows={4} /></label><button className="button button-primary" type="submit">{submitted ? 'Message received!' : 'Send message'} <span>-&gt;</span></button></form></div></section></main>
-      <footer><div className="section-shell footer-inner"><a className="brand" href="#home"><img src="/McMaster-Cybersociety-Logo.jpg" alt="McMaster CyberSociety logo" /><span><strong>McMaster</strong><small>CyberSociety</small></span></a><p>Learn, compete, and level up together.</p><a href="#home">Back to top &uarr;</a></div></footer></>;
+      return () => { window.removeEventListener('scroll', handleScroll); socialContainer.remove(); themeToggle.remove(); if (teamTimer) window.clearInterval(teamTimer); };
+   }, [submitted]);
+   return <><Head><title>McMaster Computer Science Society</title><meta name="description" content="A demo dashboard for the McMaster Computer Science Society." /><link rel="icon" href="/McMaster-Cybersociety-Logo.jpg" /></Head>
+      <header className="site-header"><a className="brand" href="#home" aria-label="McMaster Computer Science Society home"><img src="/McMaster-Cybersociety-Logo.jpg" alt="McMaster Computer Science Society logo" /><span><strong>McMaster</strong><small>Computer Science Society</small></span></a><button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle navigation">☰</button><nav className={menuOpen ? 'open' : ''} aria-label="Main navigation"><a href="#updates">Updates</a><a href="#projects">Projects</a><a href="#ctf">CTFs</a><a href="#resources">Resources</a><a href="#about">About</a><a className="nav-cta" href="#contact">Get involved <span>↗</span></a></nav></header>
+      <main id="home"><section className="hero section-shell"><div className="hero-copy"><p className="eyebrow">McMaster University · Hamilton, ON</p><h1 className={isTypingTitle ? 'is-typing' : ''} aria-label="Learn, build, and break things.">{heroTitle.split('|').map((line, index) => index === 0 ? <span key={index}>{line}{heroTitle.includes('|') && <br />}</span> : <em key={index}>{line}</em>)}</h1><p className="hero-text">A home for curious McMaster students to explore computer science, cybersecurity, and the people behind both.</p><div className="hero-actions"><a className="button button-primary" href="#contact">Join the community <span>→</span></a><a className="button button-plain" href="#updates">See what&apos;s on <span>↓</span></a></div></div><aside className="next-event"><p className="card-label"><span className="status-dot" /> Next up</p><div className="event-date"><b>30</b><span>SEP<br />TUE</span></div><h2>Fall Kickoff<br />Social</h2><p>6:30 PM · TBA</p><a href="#contact">Save your spot <span>→</span></a></aside></section>
+      <section id="updates" className="section-shell content-section"><div className="section-heading"><p className="eyebrow">01 / Stay in the loop</p><h2>Announcements</h2><p>Swap these demo cards with your latest society news.</p></div><ContentCarousel items={announcements} pageSize={2} className="announcement-grid" label="announcements" renderItem={(item) => <article className="announcement-card" key={item.title}><div><span className="tag">{item.tag}</span><span className="date">{item.date}</span></div><h3>{item.title}</h3><p>{item.body}</p><a href="#contact">Read update <span>→</span></a></article>} /></section>
+      <section id="projects" className="section-shell content-section projects-section"><div className="section-heading"><p className="eyebrow">02 / Made at Mac</p><h2>Project showcase</h2><p>A simple gallery template for student and club work.</p></div><ContentCarousel items={projects} pageSize={3} className="project-grid" label="projects" renderItem={(project, i) => <article className="project-card" key={project.icon}><div className={`project-art art-${i + 1} ${project.featured ? 'firewall-art' : ''}`}>{project.featured ? <div className="firewall-preview" aria-label="Prompt firewall preview"><p><span>INPUT</span> Ignore prior instructions</p><div><b>SCAN</b><i>Threat detected</i></div><p><span>VERDICT</span> <strong>BLOCKED</strong></p></div> : <><span>{project.icon}</span><small>YOUR PROJECT<br />IMAGE / PREVIEW</small></>}</div><div className="project-content"><p className="card-label">{project.featured ? 'Cybersecurity project' : 'Featured project'}</p><h3>{project.title}</h3><p>{project.body}</p><a href="#contact">{project.featured ? 'View case study' : 'View project'} <span>↗</span></a></div></article>} /></section>
+      <section id="ctf" className="section-shell content-section ctf-section"><div className="section-heading"><p className="eyebrow">03 / Capture the flag</p><h2>CTF central</h2><p>Keep score, find your next competition, and build your team.</p></div><div className="ctf-grid"><article className="ranking-card"><p className="card-label">Recent rankings</p><ol><li><span>1</span><b>byte_bandits</b><em>4,920 pts</em></li><li><span>2</span><b>root_access</b><em>3,840 pts</em></li><li><span>3</span><b>mcmaster_cs</b><em>3,275 pts</em></li></ol><a href="#contact">See full rankings <span>→</span></a></article><article className="upcoming-card"><p className="card-label"><span className="status-dot" /> Coming up</p><ContentCarousel items={ctfEvents} pageSize={1} className="event-carousel" label="upcoming CTFs" renderItem={(event) => <div key={event.title}><h3>{event.title}</h3><p>{event.date}</p><div className="team-callout"><span>◎</span><div><b>Looking for a team?</b><p>{event.detail}</p></div></div><a className="button button-primary" href="#contact">Register interest <span>→</span></a></div>} /></article></div></section>
+      <section id="resources" className="resource-band"><div className="section-shell"><div className="section-heading"><p className="eyebrow">04 / Keep learning</p><h2>Resources for the curious</h2></div><ContentCarousel items={resources} pageSize={3} className="resource-grid" label="resources" renderItem={(resource, i) => <a className="resource-card" href="#contact" key={resource.title}><span>0{i + 1}</span><h3>{resource.title}</h3><p>{resource.text}</p><b>Explore <i>→</i></b></a>} /></div></section>
+      <section id="about" className="section-shell content-section about-section"><div className="about-copy"><p className="eyebrow">05 / About the society</p><h2>Built for the question-askers.</h2><p>We&apos;re a student-led community making room to explore technical ideas, share what we learn, and have a great time doing it.</p><a className="button button-dark" href="#contact">Meet the team <span>→</span></a></div><div className="values-card"><p className="card-label">What guides us</p><div><span>01</span><h3>Curiosity first</h3><p>There&apos;s no such thing as a silly question here.</p></div><div><span>02</span><h3>Learn together</h3><p>Knowledge grows when it&apos;s shared.</p></div><div><span>03</span><h3>Make it real</h3><p>Turn an idea into something you can show.</p></div></div></section>
+      <section id="contact" className="contact-section"><div className="section-shell contact-grid"><div><p className="eyebrow">06 / Let&apos;s talk</p><h2>Bring us your<br /><em>bright idea.</em></h2><p>Use this form as a starter for project submissions, event questions, or a general hello.</p><a href="mailto:cybersoc@mcmaster.ca">cybersoc@mcmaster.ca <span>↗</span></a></div><form onSubmit={submit}><label>Your name<input required placeholder="Jane Doe" /></label><label>Email address<input required type="email" placeholder="you@mcmaster.ca" /></label><label>What can we help with?<select defaultValue=""><option value="" disabled>Choose a topic</option><option>Project submission</option><option>Joining the society</option><option>Event question</option><option>Something else</option></select></label><label>Message<textarea required placeholder="Tell us a little more..." rows={4} /></label><button className="button button-primary" type="submit">{submitted ? 'Message received!' : 'Send message'} <span>→</span></button></form></div></section></main>
+      <footer><div className="section-shell footer-inner"><a className="brand" href="#home"><img src="/McMaster-Cybersociety-Logo.jpg" alt="" /><span><strong>McMaster</strong><small>Computer Science Society</small></span></a><p>Demo dashboard template · Replace this content with your own.</p><a href="#home">Back to top ↑</a></div></footer></>;
 };
 export default Home;
