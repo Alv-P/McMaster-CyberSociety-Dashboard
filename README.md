@@ -1,49 +1,39 @@
-# NextJS and NextUI Landing Page Template
+# McMaster Computer Science Society Dashboard
 
-You can deploy here directly to vercel [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Siumauricio/landing-template-nextui)
+A responsive Next.js demo site for the McMaster Computer Science Society. It includes announcements, projects, CTFs, resources, a team carousel, dark mode, and motion that respects reduced-motion preferences.
 
-This is a template for NextJS and NextUI. 
+## Deploy on Vercel
 
-[NextJS](https://nextjs.org/) 
-[NextUI](https://nextui.org/)
+This repository is ready to import as a Vercel project. Vercel automatically detects the Next.js framework and uses the included production build command.
 
-You can see the demo here: https://landing-template-nextui.vercel.app/
-For improve this template, you can create a pull request or open an issue here [Issues](https://github.com/Siumauricio/landing-template-nextui/issues) or [Pull Request](
-    https://github.com/Siumauricio/landing-template-nextui/pulls)
+1. Push this repository to GitHub, GitLab, or Bitbucket.
+2. In [Vercel](https://vercel.com/new), select **Add New → Project** and import the repository.
+3. Leave the detected settings unchanged:
+   - Framework Preset: **Next.js**
+   - Build Command: `npm run build`
+   - Install Command: `npm install`
+   - Output Directory: leave blank
+4. Select **Deploy**.
 
-### Dark Mode
-![Landing Page Dark Mode](./public/Screenshot_2.png)
+No environment variables are required for the demo. Subsequent pushes to the connected branch create deployments automatically; pull requests receive preview deployments.
 
-### Light Mode
-![Landing Page Light Mode](./public/Screenshot_3.png)
+## Local development
 
-- Hero Section
-- Features Section 1
-- Features Section 2
-- Features Section 3
-- Testimonials Section
-- CTA Section
-- Pricing Section
-- FAQ Section
-- Footer Section
-- Dark Mode Support
-- Full Responsive
+Requires Node.js 20.9 or newer.
 
-## For Run
-
-Install dependencies
-
-    
 ```bash
 npm install
-```
-
-Start the server
-
-    
-        
-```bash
 npm run dev
 ```
 
-Now you can visit https://localhost:3000 in your browser.
+Open [http://localhost:3000](http://localhost:3000).
+
+To verify the deployment build locally:
+
+```bash
+npm run build
+```
+
+## Updating page content
+
+Content lists live near the top of `pages/index.tsx`. Add entries to the announcements, projects, CTF events, or resources arrays. Each section is backed by a reusable manual pager, so page controls only appear once the display capacity is exceeded.
