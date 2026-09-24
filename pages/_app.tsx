@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import '../styles/motion.css';
 import type {AppProps} from 'next/app';
 import {createTheme, NextUIProvider} from '@nextui-org/react';
 import {ThemeProvider as NextThemesProvider} from 'next-themes';
