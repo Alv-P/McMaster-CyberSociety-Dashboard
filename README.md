@@ -1,6 +1,6 @@
 # McMaster CyberSociety Dashboard
 
-A responsive Next.js prototype for a McMaster CyberSociety CTF standings and learning-resources dashboard. Supporting sections demonstrate how the dashboard can fit into a broader society site; the CTF and resources areas are the primary focus.
+A responsive Next.js site for McMaster CyberSociety, with events, student projects, an executive team, a CTF standings hub, and curated cybersecurity learning resources.
 
 ## Deploy on Vercel
 
@@ -15,7 +15,7 @@ This repository is ready to import as a Vercel project. Vercel automatically det
    - Output Directory: leave blank
 4. Select **Deploy**.
 
-No environment variables are required for the demo. Subsequent pushes to the connected branch create deployments automatically; pull requests receive preview deployments.
+No environment variables are required. Subsequent pushes to the connected branch create deployments automatically; pull requests receive preview deployments.
 
 ## Local development
 
