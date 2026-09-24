@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "mcmaster-cybersociety-dashboard",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -23,7 +23,7 @@
     "eslint-config-next": "12.3.0",
     "typescript": "4.8.3"
   },
-  "description": "You can deploy here directly to vercel [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/Siumauricio/landing-template-nextui)",
+  "description": "McMaster Computer Science Society demo dashboard.",
   "main": "next.config.js",
   "repository": {
     "type": "git",
@@ -32,6 +32,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "bugs": {
     "url": "https://github.com/Alv-P/McMaster-CyberSociety-Dashboard/issues"
   },
