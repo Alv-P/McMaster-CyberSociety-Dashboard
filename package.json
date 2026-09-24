@@ -23,7 +23,7 @@
     "eslint-config-next": "12.3.0",
     "typescript": "4.8.3"
   },
-  "description": "McMaster Computer Science Society demo dashboard.",
+  "description": "McMaster CyberSociety demo dashboard.",
   "main": "next.config.js",
   "repository": {
     "type": "git",
