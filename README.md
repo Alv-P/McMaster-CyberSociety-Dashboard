@@ -1,6 +1,6 @@
-# McMaster Computer Science Society Dashboard
+# McMaster CyberSociety Dashboard
 
-A responsive Next.js demo site for the McMaster Computer Science Society. It includes announcements, projects, CTFs, resources, a team carousel, dark mode, and motion that respects reduced-motion preferences.
+A responsive Next.js prototype for a McMaster CyberSociety CTF standings and learning-resources dashboard. Supporting sections demonstrate how the dashboard can fit into a broader society site; the CTF and resources areas are the primary focus.
 
 ## Deploy on Vercel
 
