@@ -92,7 +92,7 @@ const Home: NextPage = () => {
          clearSequence();
          if (!entry.isIntersecting) { setHeroTitle('Learn, build,|and break things.'); return; }
          const id = sequence;
-         wait(beginTitleAnimation, 1400, id);
+         wait(beginTitleAnimation, 1000, id);
       }, {threshold: .55});
       if (hero) observer.observe(hero);
       return () => { observer.disconnect(); clearSequence(); };
